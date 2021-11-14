@@ -24,7 +24,7 @@ Widget buildPicture(context) =>
 
     StaggeredGridView.extentBuilder(
       itemCount: items.length - 200,
-      staggeredTileBuilder: (index) => StaggeredTile.extent(1, 300),
+      staggeredTileBuilder: (index) => const StaggeredTile.extent(1, 300),
       mainAxisSpacing: 8,
       crossAxisSpacing: 8,
       maxCrossAxisExtent: 400,
@@ -36,7 +36,7 @@ Widget buildPicture(context) =>
 
 Widget buildPicturel(context) => StaggeredGridView.countBuilder(
       itemCount: items.length,
-      staggeredTileBuilder: (context) => StaggeredTile.count(1, 1),
+      staggeredTileBuilder: (context) => const StaggeredTile.count(1, 1),
       crossAxisCount: 4,
       itemBuilder: (context, position) =>
           generateItem(items[position], context),
@@ -58,7 +58,7 @@ Widget generateItem(Pjson picture, context) {
           Flexible(
             flex: 2,
             child: Container(
-              margin: EdgeInsets.all(8),
+              margin: const EdgeInsets.all(8),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(8),
                 child: Image.network(

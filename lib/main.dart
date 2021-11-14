@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:http/http.dart' as http;
 import 'Home.dart';
 import 'p_json.dart';
@@ -35,12 +34,10 @@ class MyApp extends StatelessWidget {
         duration: 3000,
         splashTransition: SplashTransition.scaleTransition,
         backgroundColor: Colors.blue,
-        splash: Center(
-          child: Container(
-            child: const Text(
-              'Test Apps',
-              style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-            ),
+        splash: const Center(
+          child: Text(
+            'Test Apps',
+            style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
           ),
         ),
         nextScreen: const MyHomePage(),
@@ -117,7 +114,7 @@ class MyHomePageState extends State<MyHomePage> {
               onTap: () {
                 showAboutDialog(
                     context: context,
-                    applicationIcon: FlutterLogo(),
+                    applicationIcon: const FlutterLogo(),
                     applicationVersion: "1.0",
                     applicationLegalese: "Legalese information ...",
                     applicationName: "Flutter Test App");

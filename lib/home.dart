@@ -41,7 +41,7 @@ class CardItem {
         body: SizedBox(
           height: 200,
           child: ListView.separated(
-            padding: EdgeInsets.all(5),
+            padding: const EdgeInsets.all(5),
             scrollDirection: Axis.horizontal,
             itemCount: itemcardItem.length,
             separatorBuilder: (context, index) => const SizedBox(width: 12),
@@ -55,7 +55,7 @@ class CardItem {
   }
 
   Widget buildCard(CardItem item, context) =>
-      Container(
+      SizedBox(
         width: 200,
         child: Column(
           children: [
@@ -76,7 +76,7 @@ class CardItem {
             const SizedBox(height: 4),
             Text(
               item.title,
-              style: TextStyle(fontSize: 24),
+              style: const TextStyle(fontSize: 24),
             )
           ],
         ),

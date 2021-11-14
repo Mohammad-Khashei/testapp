@@ -1,17 +1,13 @@
 // ignore_for_file: file_names
-import 'dart:isolate';
-import 'dart:ui';
+import 'dart:typed_data';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter_downloader/flutter_downloader.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'p_json.dart';
+import 'package:permission_handler/permission_handler.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await FlutterDownloader.initialize();
-}
+
 class DesPage extends StatefulWidget {
   final Pjson _pjson;
 
@@ -22,103 +18,21 @@ class DesPage extends StatefulWidget {
 }
 
 class _DesPageState extends State<DesPage> {
-/*  bool loading = false;
 
-  Future<bool> saveFile(String url, String fileName) async {
-    Directory directory;
-    try {
-      if (Platform.isAndroid) {
-        if (await requestPermission(Permission.storage)) {
-          directory = (await getExternalStorageDirectory())!;
-          print(directory.path);
-          String newPath = "";
-          //    /storage/emulated/0/Android/data/com.example.myapp/files/
-          List<String> folders = directory.path.split("/");
-          for (int x = 1; x < folders.length; x++) {
-            String folder = folders[x];
-            if (folder != "Android") {
-              newPath += "/" + folder;
-            } else {
-              break;
-            }
-          }
-          newPath = newPath + "/RPSapp";
-          directory = Directory(newPath);
-        } else {
-          return false;
-        }
-      } else {
-
-      }
-    } catch (e) {
-
-    }
-    return false;
-  }
-
-  Future<bool> requestPermission(Permission permission) async {
-    if (await permission.isGranted) {
-      return true;
-    } else {
-      var result = await permission.request();
-      if (result == PermissionStatus.granted) {
-        return true;
-      } else {
-        return false;
-      }
+  _save() async {
+    var status = await Permission.storage.request();
+    if(status.isGranted) {
+      var response = await Dio().get(
+          widget._pjson.url,
+          options: Options(responseType: ResponseType.bytes));
+      final result = await ImageGallerySaver.saveImage(
+          Uint8List.fromList(response.data),
+          quality: 60,
+          name: "hello");
+      print(result);
     }
   }
 
-  downloadFile() async {
-    setState(() {
-      loading = true;
-    });
-
-    bool downloaded =
-        await saveFile("https://www.google.com/images/branding/googlelogo/1x/googlelogo_light_color_272x92dp.png", "picture.png");
-    if (downloaded) {
-      print("File DownLoaded");
-    } else {
-      print("problem");
-    }
-    setState(() {
-      loading = false;
-    });
-  }*/
-  downloadFile() async {
-    final status = await Permission.storage.request();
-
-    if(status.isGranted){
-      final baseStorage = await getExternalStorageDirectory();
-
-      final id = await FlutterDownloader.enqueue(url: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4', savedDir: baseStorage.path,fileName:'fileName');
-    } else {
-      print('no permission');
-    }
-  }
-  int progress = 0 ;
-  ReceivePort receivePort = ReceivePort();
-  @override
-  void initState() {
-
-    IsolateNameServer.registerPortWithName(receivePort.sendPort, "Downloading Picture");
-
-    receivePort.listen((message) {
-      receivePort.listen((message) {
-        setState(() {
-          progress = message;
-        });
-      });
-
-    });
-    FlutterDownloader.registerCallback(downloadCallback);
-    super.initState();
-  }
-
-  static downloadCallback(id,status,progress){
-    SendPort sendPort =IsolateNameServer.lookupPortByName("Downloading Picture");
-    sendPort.send(progress);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -171,7 +85,7 @@ class _DesPageState extends State<DesPage> {
             onTap: () {
               showAboutDialog(
                   context: context,
-                  applicationIcon: FlutterLogo(),
+                  applicationIcon: const FlutterLogo(),
                   applicationVersion: "1.0",
                   applicationLegalese: "Legalese information ...",
                   applicationName: "Flutter Test App");
@@ -227,13 +141,12 @@ class _DesPageState extends State<DesPage> {
                       Icons.download_rounded,
                       color: Colors.white,
                     ),
-                    onPressed: downloadFile,
+                    onPressed: _save,
                     label: const Text(
                       "Download Picture",
                       style: TextStyle(color: Colors.white, fontSize: 25),
                     ),
                   ),
-                  Text('$progress')
                 ],
               ),
             ),
